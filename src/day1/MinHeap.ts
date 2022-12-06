@@ -12,10 +12,27 @@ export default class MinHeap {
     }
 
     insert(value: number): void {
-
+        this.data[this.length]=value; //insert at end
+        this.heapifyUp(this.length); // bubble it up if needed
+        this.length++; //update length
 
 }
     delete(): number {
+        if(this.length === 0){
+            return -1
+        }
+        
+        const out = this.data[0];
+        this.length--; // do it before because other operation must have correct length
+        
+        if(this.length ===0){
+            this.data=[];
+            return out;
+        }
+
+        this.data[0]= this.data[this.length];
+        this.heapifyDown(0);
+        return out;
 
 }
 private heapifyDown(idx:number):void{
@@ -26,11 +43,25 @@ private heapifyDown(idx:number):void{
     
     //currently at length or left child is greater than length
     //we are out of bounds cant swap
-    if(idx>=this.length || lIdx >= length){
+    if(idx>=this.length || lIdx >= this.length){
         return;
     }
-    const lV = this.data[lIdx];
-    const rV = this.data[rIdx]
+    const lV = this.data[lIdx];//child value
+    const rV = this.data[rIdx] //child value
+    const v = this.data[idx] //current value
+
+    if(lV > rV && v > rV ){ // right child is smaller and our value is greater than child
+        //swap our value with childs
+        this.data[idx]=rV;
+        this.data[rIdx]=v;
+        this.heapifyDown(rIdx)
+    }else if(rV > lV && v > lV ){ // right child is smaller and our value is greater than child
+        //swap our value with childs
+        this.data[idx]=lV;
+        this.data[lIdx]=v;
+        
+        this.heapifyDown(lIdx)
+    }
     
 }
 
@@ -61,10 +92,10 @@ private parent(idx:number):number{
 }   
 
 private leftChild(idx:number):number{
-    return idx * 2 - 1;
+    return idx * 2 + 1;
 }
 private rightChild(idx:number):number{
-    return idx * 2 - 2;
+    return idx * 2 + 2;
 }
 
 
